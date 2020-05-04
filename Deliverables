@@ -1,1 +1,57 @@
+import java.util.Date;
 
+public class Deliverable {
+
+  private String uniqueID;
+  private String name;
+  private String description;
+  private Date dueDate;
+  //private ArrayList<Requirements> requirements;
+  //private ArrayList<Tasks> tasks;
+  
+  public Deliverable (String name, String description, Date dueDate/*, ArrayList<Requirements> requirements, ArrayList<Tasks> tasks*/) {
+  
+  this.name = name;
+  this.description = description;
+  this.dueDate = dueDate;
+  //this.requirements = requirements;
+  //this.tasks = tasks;
+}
+
+  public void GenerateUniqueID() {
+  //To Do
+  }
+  
+  public void updateName (String name) {
+  this.name = name;
+  }
+  
+  public void updateDescription (String description) {
+  this.description = description;
+  }
+  
+  public void updateDueDate (Date dueDate) {
+  this.dueDate = dueDate;
+  }
+  
+  /*
+  public void assignRequirement (Requirements requirements) {
+    this.requirements.add(requirements);
+  }
+  
+  public void assignTask (Tasks tasks) {
+    this.tasks.add(tasks);
+  }
+  
+  public void updateRequirements (ArrayList<Requirements> requirements) {
+    this.requirements = requirements;
+  }
+  
+  public void updateTasks (ArrayList<Tasks> tasks) {
+    this.tasks = tasks;
+  }
+  */
+  
+  
+    
+  
