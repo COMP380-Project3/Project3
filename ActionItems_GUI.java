@@ -1,3 +1,7 @@
+import javax.swing.JOptionPane;
+import javax.swing.JTextField;
+import javax.swing.table.DefaultTableModel;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -80,23 +84,7 @@ public class ActionItems_GUI extends javax.swing.JFrame {
          });
 
         table.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
-            },
+        		new Object [][] {},
             new String [] {
                 "Status", "Name", "Resource", "Start Date", "End Date"
             }
@@ -116,6 +104,7 @@ public class ActionItems_GUI extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
+        this.model = (DefaultTableModel) table.getModel(); 
         table.getTableHeader().setReorderingAllowed(false);
         jScrollPane1.setViewportView(table);
 
@@ -136,7 +125,7 @@ public class ActionItems_GUI extends javax.swing.JFrame {
         deleteButton.setText("Delete");
         deleteButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                DeleteButtonActionPerformed(evt);
+                deleteButtonActionPerformed(evt);
             }
         });
 
@@ -233,6 +222,10 @@ public class ActionItems_GUI extends javax.swing.JFrame {
         pack();
     }// </editor-fold>                        
 
+    private void TableMouseClicked(java.awt.event.MouseEvent evt) {                                   
+        this.selectedRowIndex = table.getSelectedRow();
+   }
+    
     private void DeliverablesButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                   
     	Deliverables_GUI deliverables = new Deliverables_GUI();
         deliverables.setVisible(true);
@@ -255,19 +248,32 @@ public class ActionItems_GUI extends javax.swing.JFrame {
     	Issues_GUI issues = new Issues_GUI();
         issues.setVisible(true);
         setVisible(false);
-    }                                            
+    }      
+    
 
     private void CreateButtonActionPerformed(java.awt.event.ActionEvent evt) {                                             
-        // TODO add your handling code here:
-    }                                            
+    	 String [] inputs = inputAdd();
+         //Tasks task = new Tasks(inputs[0],inputs[2],inputs[3],inputs[1]);
+        // this.tasks.add(task);
+         Object[] row = new Object [4];
+        // for (int i=0;i<this.tasks.size();i++) {
+         //	row[0] = tasks.get(i).getName();
+         //	row[1] = tasks.get(i).getType();
+         //	row[2] = tasks.get(i).getExpectedStartDate();
+         //	row[3] = tasks.get(i).getExpectedEndDate();
+         	
+         //}
+         //model.addRow(row);
+     }                                               
 
     private void UpdateButtonActionPerformed(java.awt.event.ActionEvent evt) {                                             
         // TODO add your handling code here:
     }                                            
 
-    private void DeleteButtonActionPerformed(java.awt.event.ActionEvent evt) {                                             
-        // TODO add your handling code here:
-    }                                            
+    private void deleteButtonActionPerformed(java.awt.event.ActionEvent evt) {                                             
+        //this.tasks.remove(selectedRowIndex);
+        model.removeRow(selectedRowIndex);
+    }                                   
 
     private void EditButtonActionPerformed(java.awt.event.ActionEvent evt) {                                           
         // TODO add your handling code here:
@@ -329,5 +335,35 @@ public class ActionItems_GUI extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private java.awt.Panel resource_Info;
     private javax.swing.JTable table;
-    // End of variables declaration                   
+    private DefaultTableModel model;
+    int selectedRowIndex;
+    // End of variables declaration 
+    
+    
+    public static String[] inputAdd() {
+		  String[] strings = new String[4]; 
+	      JTextField nameTemp= new JTextField(10);
+	      JTextField typeTemp = new JTextField(5);
+	      JTextField startTemp = new JTextField(5);
+	      JTextField endTemp = new JTextField(5);
+	      Object[] fields= {"please enter values","Enter title",nameTemp,"Enter type",typeTemp,"Enter start",startTemp,"Enter end",endTemp};
+	    //Input message with the textfields
+	      int result = JOptionPane.showConfirmDialog(null, fields, 
+	               "Add Product", JOptionPane.OK_CANCEL_OPTION,JOptionPane.INFORMATION_MESSAGE);
+	      if (result == JOptionPane.OK_OPTION) {
+	    	  String name = nameTemp.getText();
+	    	  String type=typeTemp.getText();
+	    	  String start=startTemp.getText();
+	    	  String end  = endTemp.getText();
+	    	//if the user hasn't entered anything and clicked OK 
+	    	  if (name == ""&& start==""&& end=="") {
+	    		  JOptionPane.showMessageDialog(null, "Wrong input\n\n try Again");	
+	    		//restarting the method.
+	    		  inputAdd();
+	    		  } 	  
+	    	  	  
+	    	 strings[0]=name;strings[1]=type;strings[2]=start;strings[3]= end;
+	      }
+	      return strings;
+	  }
 }
