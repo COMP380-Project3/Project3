@@ -1,1 +1,88 @@
 
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Iterator;
+import java.util.UUID;
+
+//public class ActionItem extends Issues{ // is what i would put if i had an issues class
+public class Resource{
+	
+	private String uniqueID;
+	private String name;
+	private String title;
+	private ArrayList<Skills> skill;
+	private String availabilityCalendar;
+	private Double payRate = 0.0;
+        private ArrayList<Tasks> tasksAssigned;
+        private String status;
+
+	
+	//Resource constructor
+	Resource(String name, String title, ArrayList skill, String availabilityCalendar,
+			   Double payRate, ArrayList taskAssigned){
+		uniqueID = generateUniqueID();
+		this.name = name;
+		this.title = title;
+                this.skill = skill;
+                this.availabilityCalendar = availabilityCalendar;
+                this.payRate = payRate;
+                this.tasksAssigned = taskAssigned;
+                this.status = status;
+	}
+	
+	private static String generateUniqueID() {
+		String uniqueID = UUID.randomUUID().toString();
+		return uniqueID;
+	}
+	
+	
+        public void updateName(String name) {
+		this.name = name;
+	}
+       
+        public void updateTitle(String title) {
+		this.title = title;
+	}
+        
+        public void updateSkill(ArrayList skill) {
+            this.skill = skill;
+	}
+        
+        public void addNewSkill(ArrayList skill){
+            Iterator i = skill.iterator();
+            while (i.hasNext()) {
+                if(i.next() != skill){
+                    this.skill = skill;
+                }
+                else{
+                    System.out.println("Resource already has this skill");
+                }
+            }
+        }
+       
+        /*public void updateAvailabilityCalendar()
+                this.availabilityCalendar = availabilityCalendar;
+        */
+        
+        public void updatePayRate(Double payRate) {
+            this.payRate = payRate;
+	}
+        
+        public void addNewTask(ArrayList task){
+            Iterator i = tasksAssigned.iterator();
+            while (i.hasNext()) {
+                if(i.next() != task){
+                    this.tasksAssigned = task;
+                }
+                else{
+                    System.out.println("Resource already has this task assigned to it");
+                }
+            }
+            }
+}
+        
+        
+        
+        
+	
+	
