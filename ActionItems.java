@@ -2,7 +2,7 @@ import java.time.LocalDate;
 import java.util.UUID;
 
 //public class ActionItem extends Issues{ // is what i would put if i had an issues class
-public class ActionItem{
+public class ActionItems{
 
 	String uniqueID;
 	String name;
@@ -16,7 +16,7 @@ public class ActionItem{
 	String statusDescription;
 	String updateDate;
 
-	ActionItem(){
+	ActionItems(){
 		uniqueID = generateUniqueID();
 		setName("");
 		setDescription("");
@@ -33,7 +33,7 @@ public class ActionItem{
 	}
 
 	//constructor with items
-	ActionItem(String name, String description, String dateCreated, String[] resourceName,
+	ActionItems(String name, String description, String dateCreated, String[] resourceName,
 			   String expectedCompletionDate, String actualCompletionDate,
 			   String status, String statusDescription){
 		uniqueID = generateUniqueID();
@@ -52,7 +52,7 @@ public class ActionItem{
 		setUpdateDate();
 	}
 
-	private static String generateUniqueID() {
+	public String generateUniqueID() {
 		String uniqueID = UUID.randomUUID().toString();
 		return uniqueID;
 	}
