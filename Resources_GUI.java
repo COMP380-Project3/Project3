@@ -221,7 +221,12 @@ public class Resources_GUI extends javax.swing.JFrame {
         );
 
         pack();
-    }// </editor-fold>                        
+    }// </editor-fold> 
+	
+	@SuppressWarnings("unused")
+	private void TableMouseClicked(java.awt.event.MouseEvent evt) {                                   
+        this.selectedRowIndex = table.getSelectedRow();
+   }
 
     private void DeliverablesButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                   
     	 Deliverables_GUI deliverables = new Deliverables_GUI();
