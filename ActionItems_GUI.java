@@ -3,6 +3,10 @@ import java.util.LinkedList;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.io.Serializable;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -91,7 +95,7 @@ public class ActionItems_GUI extends javax.swing.JFrame {
 		table.setModel(new javax.swing.table.DefaultTableModel(
 				new Object [][] {},
 				new String [] {
-						"Status", "Name", "Resource", "Start Date", "End Date"
+						"Status", "Name", "Resource", "Start Date", "End Date", "Unique ID"
 				}
 				) {
 			Class[] types = new Class [] {
@@ -227,8 +231,14 @@ public class ActionItems_GUI extends javax.swing.JFrame {
 		pack();
 	}// </editor-fold>
 
-	private void TableMouseClicked(java.awt.event.MouseEvent evt) {
+	// private void TableMouseClicked(java.awt.event.MouseEvent evt) {
+	// 	this.selectedRowIndex = table.getSelectedRow();
+  //   System.out.println("Selected Row Index = " + table.getSelectedRow());
+	// }
+
+  private void TableMouseClicked(java.awt.event.MouseAdapter evt) {
 		this.selectedRowIndex = table.getSelectedRow();
+    System.out.println("Selected Row Index = " + table.getSelectedRow());
 	}
 
 	private void DeliverablesButtonActionPerformed(java.awt.event.ActionEvent evt) {
@@ -270,6 +280,7 @@ public class ActionItems_GUI extends javax.swing.JFrame {
     actionItemList.add(actionItem);
     System.out.println("in create button " + actionItem.uniqueID);
 		model.addRow(row);
+    //System.out.println("# of row = " + model.getColumnCount());
     //model.insertRow(actionItem.uniqueID, row);
 	}
 
@@ -279,6 +290,7 @@ public class ActionItems_GUI extends javax.swing.JFrame {
 
 	private void deleteButtonActionPerformed(java.awt.event.ActionEvent evt) {
 		//this.tasks.remove(selectedRowIndex);
+    System.out.println("Selected row index: " + selectedRowIndex);
 		model.removeRow(selectedRowIndex);
     //actonItemList.remove()
 	}
@@ -404,8 +416,9 @@ public class ActionItems_GUI extends javax.swing.JFrame {
 	}
 
   public String[] inputEdit(){
-    ActionItems values = actionItemList.get(selectedRowIndex);
-    System.out.println("in edit " + values.uniqueID);
+    //ActionItems values = actionItemList.get(actionItemList.indexOf(model.getValueAt(selectedRowIndex, 5)));
+    //ActionItems currentItem = actionItemList.get();
+    //System.out.println("in edit " + values.uniqueID);
     return null;
   }
 
