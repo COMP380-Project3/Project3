@@ -1,3 +1,7 @@
+import javax.swing.JOptionPane;
+import javax.swing.JTextField;
+import javax.swing.table.DefaultTableModel;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -81,25 +85,9 @@ public class Resources_GUI extends javax.swing.JFrame {
         
 
         table.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null}
-            },
+            new Object [][] {},
             new String [] {
-                "Name", "Type", "Status", "Created", "Skill Level", "Task Assigned"
+                "ID","Name", "Type", "Status", "Created", "Skill Level", "Task Assigned"
             }
         ) {
             Class[] types = new Class [] {
@@ -154,7 +142,8 @@ public class Resources_GUI extends javax.swing.JFrame {
                 HomeButtonActionPerformed(evt);
             }
         });
-
+        this.model = (DefaultTableModel) table.getModel(); 
+        
         javax.swing.GroupLayout resource_InfoLayout = new javax.swing.GroupLayout(resource_Info);
         resource_Info.setLayout(resource_InfoLayout);
         resource_InfoLayout.setHorizontalGroup(
@@ -260,7 +249,18 @@ public class Resources_GUI extends javax.swing.JFrame {
     
 
     private void CreateButtonActionPerformed(java.awt.event.ActionEvent evt) {                                             
-        // TODO add your handling code here:
+    	 String [] inputs = inputAdd();
+         //Tasks task = new Tasks(inputs[0],inputs[2],inputs[3],inputs[1]);
+        // this.tasks.add(task);
+         Object[] row = new Object [4];
+        // for (int i=0;i<this.tasks.size();i++) {
+         //	row[0] = tasks.get(i).getName();
+         //	row[1] = tasks.get(i).getType();
+         //	row[2] = tasks.get(i).getExpectedStartDate();
+         //	row[3] = tasks.get(i).getExpectedEndDate();
+         	
+         //}
+         //model.addRow(row);
     }                                            
 
     private void UpdateButtonActionPerformed(java.awt.event.ActionEvent evt) {                                             
@@ -268,7 +268,8 @@ public class Resources_GUI extends javax.swing.JFrame {
     }                                            
 
     private void DeleteButtonActionPerformed(java.awt.event.ActionEvent evt) {                                             
-        // TODO add your handling code here:
+        //this.tasks.remove(selectedRowIndex); you need to put your resources list.
+        model.removeRow(selectedRowIndex);
     }                                            
 
     private void EditButtonActionPerformed(java.awt.event.ActionEvent evt) {                                           
@@ -331,5 +332,37 @@ public class Resources_GUI extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private java.awt.Panel resource_Info;
     private javax.swing.JTable table;
-    // End of variables declaration                   
+    private DefaultTableModel model;
+    int selectedRowIndex;
+    // End of variables declaration
+    
+    
+    public static String[] inputAdd() {
+		  String[] strings = new String[4]; 
+	      JTextField name= new JTextField(10);
+	      JTextField type = new JTextField(5);
+	      JTextField start = new JTextField(5);
+	      JTextField end = new JTextField(5);
+	      Object[] fields= {"please enter values","Enter title",name,"Enter type",type,"Enter start",start,"Enter end",end};
+	    //Input message with the textfields
+	      int result = JOptionPane.showConfirmDialog(null, fields, 
+	               "Add Product", JOptionPane.OK_CANCEL_OPTION,JOptionPane.INFORMATION_MESSAGE);
+	      if (result == JOptionPane.OK_OPTION) {
+	    	  String names = name.getText();
+	    	  String types=type.getText();
+	    	  String starts=start.getText();
+	    	  String ends  = end.getText();
+	    	//if the user hasn't entered anything and clicked OK 
+	    	  if (names == ""&& starts==""&& ends=="") {
+	    		  JOptionPane.showMessageDialog(null, "Wrong input\n\n try Again");	
+	    		//restarting the method.
+	    		  inputAdd();
+	    		  } 	  
+	    	  	  
+	    	 strings[0]=names;strings[1]=types;strings[2]=starts;strings[3]= ends;
+	      }
+	      return strings;
+	  }
+    
+    
 }
