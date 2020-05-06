@@ -339,27 +339,27 @@ public class Resources_GUI extends javax.swing.JFrame {
     
     public static String[] inputAdd() {
 		  String[] strings = new String[4]; 
-	      JTextField name= new JTextField(10);
-	      JTextField type = new JTextField(5);
-	      JTextField start = new JTextField(5);
-	      JTextField end = new JTextField(5);
-	      Object[] fields= {"please enter values","Enter title",name,"Enter type",type,"Enter start",start,"Enter end",end};
+	      JTextField nameTemp= new JTextField(10);
+	      JTextField typeTemp = new JTextField(5);
+	      JTextField startTemp = new JTextField(5);
+	      JTextField endTemp = new JTextField(5);
+	      Object[] fields= {"please enter values","Enter title",nameTemp,"Enter type",typeTemp,"Enter start",startTemp,"Enter end",endTemp};
 	    //Input message with the textfields
 	      int result = JOptionPane.showConfirmDialog(null, fields, 
 	               "Add Product", JOptionPane.OK_CANCEL_OPTION,JOptionPane.INFORMATION_MESSAGE);
 	      if (result == JOptionPane.OK_OPTION) {
-	    	  String names = name.getText();
-	    	  String types=type.getText();
-	    	  String starts=start.getText();
-	    	  String ends  = end.getText();
+	    	  String name = nameTemp.getText();
+	    	  String type=typeTemp.getText();
+	    	  String start=startTemp.getText();
+	    	  String end  = endTemp.getText();
 	    	//if the user hasn't entered anything and clicked OK 
-	    	  if (names == ""&& starts==""&& ends=="") {
+	    	  if (name == ""&& start==""&& end=="") {
 	    		  JOptionPane.showMessageDialog(null, "Wrong input\n\n try Again");	
 	    		//restarting the method.
 	    		  inputAdd();
 	    		  } 	  
 	    	  	  
-	    	 strings[0]=names;strings[1]=types;strings[2]=starts;strings[3]= ends;
+	    	 strings[0]=name;strings[1]=type;strings[2]=start;strings[3]= end;
 	      }
 	      return strings;
 	  }
