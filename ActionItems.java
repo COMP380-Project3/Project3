@@ -9,7 +9,7 @@ public class ActionItems{
 	String description;
 	String dateCreated;
 	String dateAssigned;
-	String[] resourceName;
+	String resourceName;
 	String expectedCompletionDate;
 	String actualCompletionDate;
 	String status;
@@ -33,7 +33,7 @@ public class ActionItems{
 	}
 
 	//constructor with items
-	ActionItems(String name, String description, String dateCreated, String[] resourceName,
+	ActionItems(String name, String description, String dateCreated, String resourceName,
 			   String expectedCompletionDate, String actualCompletionDate,
 			   String status, String statusDescription){
 		uniqueID = generateUniqueID();
@@ -45,6 +45,25 @@ public class ActionItems{
 			setTodayDate(dateCreated);
 		}
 		setResources(resourceName);
+		setExpectedCompletionDate(expectedCompletionDate);
+		setActualCompletionDate(actualCompletionDate);
+		setStatus(status);
+		setStatusDescription(statusDescription);
+		setUpdateDate();
+	}
+
+  ActionItems(String name, String description, String dateCreated, String resourceName,
+			   String dateAssigned, String expectedCompletionDate, String actualCompletionDate,
+			   String status, String statusDescription, String updateDate){
+		uniqueID = generateUniqueID();
+		setName(name);
+		setDescription(description);
+		if(dateCreated.isEmpty()) {
+			setTodayDate();
+		}else {
+			setTodayDate(dateCreated);
+		}
+		setResources(resourceName, 1);
 		setExpectedCompletionDate(expectedCompletionDate);
 		setActualCompletionDate(actualCompletionDate);
 		setStatus(status);
@@ -84,11 +103,16 @@ public class ActionItems{
 		this.dateCreated = dateCreated;
 	}
 
-	public String[] getResources() {
+	public String getResources() {
 		return resourceName;
 	}
 
-	public void setResources(String[] names) {
+	public void setResources(String names) {
+		resourceName = names;
+		LocalDate today = LocalDate.now(); //automatically assign a date when a resource is assigned
+		dateAssigned = today.toString();
+	}
+  public void setResources(String names, int a) {
 		resourceName = names;
 		LocalDate today = LocalDate.now(); //automatically assign a date when a resource is assigned
 		dateAssigned = today.toString();

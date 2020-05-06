@@ -257,9 +257,11 @@ public class ActionItems_GUI extends javax.swing.JFrame {
 		String [] inputs = inputAdd();
 		//Tasks task = new Tasks(inputs[0],inputs[2],inputs[3],inputs[1]);
 		// this.tasks.add(task);
-		LinkedList <ActionItems> actionItems = new LinkedList<ActionItems>();
-		Object[] row = new Object [11];
-		for (int i=0;i<actionItems.size();i++) {
+		//LinkedList <ActionItems> actionItems = new LinkedList<ActionItems>();
+    ActionItems actionItem = new ActionItems(inputs[0], inputs[1],inputs[2],inputs[3],inputs[4],inputs[5],
+                                            inputs[6],inputs[7],inputs[8],inputs[9]);
+		Object[] row = new Object [5];
+		//for (int i=0;i<actionItems.size();i++) {
   		// row[0] = actionItems.get(i).generateUniqueID();
   		// row[1] = actionItems.get(i).getName();
   		// row[2] = actionItems.get(i).getDescription();
@@ -273,19 +275,19 @@ public class ActionItems_GUI extends javax.swing.JFrame {
   		// row[10] = actionItems.get(i).getStatus();
   		// row[11] = actionItems.get(i).getUpdateDate();
       //row[0] = ActionItems.generateUniqueID();
+      row[0] = inputs[7]; //status
   		row[1] = inputs[0]; //name
-  		row[2] = inputs[1]; //description
-  		row[3] = inputs[2]; //dateCreated
-  		row[4] = inputs[3]; //resource
-  		row[5] = inputs[4]; //dateAssigned
-  		row[6] = inputs[5]; //expected
-  		row[7] = inputs[6]; //actual
-      row[8] = inputs[7]; //status
-  		row[9] = inputs[8]; //statusDescription
-  		row[10] = inputs[9];//updateDate
+      row[2] = inputs[3]; //resource
+      row[3] = inputs[2]; //dateCreated
+      row[4] = inputs[5]; //expected
+  		// row[2] = inputs[1]; //description
+  		// row[5] = inputs[4]; //dateAssigned
+  		// row[7] = inputs[6]; //actual
+  		// row[9] = inputs[8]; //statusDescription
+  		// row[10] = inputs[9];//updateDate
 		// row[8] = ActionItem.get(i).
 		// row[9] = ActionItem.get(i).
-		}
+		//}
 		model.addRow(row);
 	}
 
