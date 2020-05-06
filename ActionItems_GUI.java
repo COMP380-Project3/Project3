@@ -19,6 +19,9 @@ public class ActionItems_GUI extends javax.swing.JFrame {
 	/**
 	 * Creates new form Resources
 	 */
+
+   LinkedList<ActionItems> actionItemList = new LinkedList<ActionItems>();
+
 	public ActionItems_GUI() {
 		initComponents();
 	}
@@ -255,40 +258,19 @@ public class ActionItems_GUI extends javax.swing.JFrame {
 
 	private void CreateButtonActionPerformed(java.awt.event.ActionEvent evt) {
 		String [] inputs = inputAdd();
-		//Tasks task = new Tasks(inputs[0],inputs[2],inputs[3],inputs[1]);
-		// this.tasks.add(task);
-		//LinkedList <ActionItems> actionItems = new LinkedList<ActionItems>();
     ActionItems actionItem = new ActionItems(inputs[0], inputs[1],inputs[2],inputs[3],inputs[4],inputs[5],
                                             inputs[6],inputs[7],inputs[8],inputs[9]);
-		Object[] row = new Object [5];
-		//for (int i=0;i<actionItems.size();i++) {
-  		// row[0] = actionItems.get(i).generateUniqueID();
-  		// row[1] = actionItems.get(i).getName();
-  		// row[2] = actionItems.get(i).getDescription();
-  		// row[3] = actionItems.get(i).getTodayDate();
-  		// row[4] = actionItems.get(i).getResources();
-  		// row[5] = actionItems.get(i).getDateAssigned();
-  		// row[6] = actionItems.get(i).getExpectedCompletionDate();
-  		// row[7] = actionItems.get(i).getActualCompletionDate();
-      // row[8] = actionItems.get(i).getStatus();
-  		// row[9] = actionItems.get(i).getStatusDescription();
-  		// row[10] = actionItems.get(i).getStatus();
-  		// row[11] = actionItems.get(i).getUpdateDate();
-      //row[0] = ActionItems.generateUniqueID();
-      row[0] = inputs[7]; //status
-  		row[1] = inputs[0]; //name
-      row[2] = inputs[3]; //resource
-      row[3] = inputs[2]; //dateCreated
-      row[4] = inputs[5]; //expected
-  		// row[2] = inputs[1]; //description
-  		// row[5] = inputs[4]; //dateAssigned
-  		// row[7] = inputs[6]; //actual
-  		// row[9] = inputs[8]; //statusDescription
-  		// row[10] = inputs[9];//updateDate
-		// row[8] = ActionItem.get(i).
-		// row[9] = ActionItem.get(i).
-		//}
+		Object[] row = new Object [6];
+    row[0] = inputs[7]; //status
+  	row[1] = inputs[0]; //name
+    row[2] = inputs[3]; //resource
+    row[3] = inputs[2]; //dateCreated
+    row[4] = inputs[5]; //expected
+    row[5] = actionItem.uniqueID;
+    actionItemList.add(actionItem);
+    System.out.println("in create button " + actionItem.uniqueID);
 		model.addRow(row);
+    //model.insertRow(actionItem.uniqueID, row);
 	}
 
 	private void UpdateButtonActionPerformed(java.awt.event.ActionEvent evt) {
@@ -298,10 +280,12 @@ public class ActionItems_GUI extends javax.swing.JFrame {
 	private void deleteButtonActionPerformed(java.awt.event.ActionEvent evt) {
 		//this.tasks.remove(selectedRowIndex);
 		model.removeRow(selectedRowIndex);
+    //actonItemList.remove()
 	}
 
 	private void EditButtonActionPerformed(java.awt.event.ActionEvent evt) {
 		// TODO add your handling code here:
+    inputEdit();
 	}
 
 	private void HomeButtonActionPerformed(java.awt.event.ActionEvent evt) {
@@ -418,4 +402,11 @@ public class ActionItems_GUI extends javax.swing.JFrame {
 		}
 		return strings;
 	}
+
+  public String[] inputEdit(){
+    ActionItems values = actionItemList.get(selectedRowIndex);
+    System.out.println("in edit " + values.uniqueID);
+    return null;
+  }
+
 }
