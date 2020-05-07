@@ -1,4 +1,59 @@
 /*
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">                          
+    private void initComponents() {
+
+        jPopupMenu1 = new javax.swing.JPopupMenu();
+        jPopupMenu2 = new javax.swing.JPopupMenu();
+        jPopupMenu3 = new javax.swing.JPopupMenu();
+        jButton1 = new javax.swing.JButton();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        jButton1.setText("jButton1");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(150, 150, 150)
+                .addComponent(jButton1)
+                .addContainerGap(177, Short.MAX_VALUE))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(103, 103, 103)
+                .addComponent(jButton1)
+                .addContainerGap(174, Short.MAX_VALUE))
+        );
+
+        pack();
+    }// </editor-fold>                        
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {                                         
+        // TODO add your handling code here:
+    }                                        
+
+
+    // Variables declaration - do not modify                     
+    private javax.swing.JButton jButton1;
+    private javax.swing.JPopupMenu jPopupMenu1;
+    private javax.swing.JPopupMenu jPopupMenu2;
+    private javax.swing.JPopupMenu jPopupMenu3;
+    // End of variables declaration                   
+}*/
+import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
+import javax.swing.JTextField;
+import javax.swing.table.DefaultTableModel;
+
+/*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
@@ -79,28 +134,12 @@ public class Resources_GUI extends javax.swing.JFrame {
 
         resourcesButton.setText("Resources");
         
-
+        JScrollPane scrollPane = new JScrollPane(table);
+        table.setFillsViewportHeight(true);
         table.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null}
-            },
-            new String [] {
-                "Name", "Type", "Status", "Created", "Skill Level", "Task Assigned"
-            }
+            new Object [][] {},
+            new String [] { "ID","Name", "Title", "Type", "Status", "Date Created", "Skills", "Task Assigned" }
+                
         ) {
             Class[] types = new Class [] {
                 java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Object.class
@@ -108,6 +147,10 @@ public class Resources_GUI extends javax.swing.JFrame {
             boolean[] canEdit = new boolean [] {
                 false, false, false, false, false, false
             };
+            boolean[] rowSelectionAllowed = new boolean [] {
+                true, true, true, true, true, true
+            };
+            
 
             public Class getColumnClass(int columnIndex) {
                 return types [columnIndex];
@@ -154,7 +197,8 @@ public class Resources_GUI extends javax.swing.JFrame {
                 HomeButtonActionPerformed(evt);
             }
         });
-
+        this.model = (DefaultTableModel) table.getModel(); 
+        
         javax.swing.GroupLayout resource_InfoLayout = new javax.swing.GroupLayout(resource_Info);
         resource_Info.setLayout(resource_InfoLayout);
         resource_InfoLayout.setHorizontalGroup(
@@ -232,7 +276,12 @@ public class Resources_GUI extends javax.swing.JFrame {
         );
 
         pack();
-    }// </editor-fold>                        
+    }// </editor-fold> 
+	
+	@SuppressWarnings("unused")
+	private void TableMouseClicked(java.awt.event.MouseEvent evt) {                                   
+        this.selectedRowIndex = table.getSelectedRow();
+   }
 
     private void DeliverablesButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                   
     	 Deliverables_GUI deliverables = new Deliverables_GUI();
@@ -260,15 +309,29 @@ public class Resources_GUI extends javax.swing.JFrame {
     
 
     private void CreateButtonActionPerformed(java.awt.event.ActionEvent evt) {                                             
-        // TODO add your handling code here:
-    }                                            
+    	 String [] inputs = inputAdd();
+         //Resource resource = new Resource(inputs[0],inputs[2],inputs[3],inputs[1],inputs[3],inputs[1]);
+         //this.resource.add(resource);
+         /*Object[] row = new Object [4];
+         for (int i=0;i<5;i++) {
+         	table.row[0]col[1] = tasks.get(i).getName();
+         	row[1] = tasks.get(i).getType();
+         	row[2] = tasks.get(i).getExpectedStartDate();
+         	row[3] = tasks.get(i).getExpectedEndDate();
+        	
+                
+         }
+         //model.addRow(row);
+    }   */           
+    }
 
     private void UpdateButtonActionPerformed(java.awt.event.ActionEvent evt) {                                             
         // TODO add your handling code here:
     }                                            
 
     private void DeleteButtonActionPerformed(java.awt.event.ActionEvent evt) {                                             
-        // TODO add your handling code here:
+        //this.tasks.remove(selectedRowIndex); you need to put your resources list.
+        model.removeRow(selectedRowIndex);
     }                                            
 
     private void EditButtonActionPerformed(java.awt.event.ActionEvent evt) {                                           
@@ -331,5 +394,43 @@ public class Resources_GUI extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private java.awt.Panel resource_Info;
     private javax.swing.JTable table;
-    // End of variables declaration                   
+    private DefaultTableModel model;
+    int selectedRowIndex;
+    // End of variables declaration
+    
+    
+    public static String[] inputAdd() {
+		  String[] strings = new String[5]; 
+	      JTextField nameTemp= new JTextField(10);
+	      JTextField titleTemp = new JTextField(10);
+	      //JTextField statusTemp = new JTextField(10);
+	      JTextField skillTemp = new JTextField(10);
+              JTextField availableTemp = new JTextField(10);
+              JTextField payrateTemp = new JTextField(10);
+	      Object[] fields= {"Please fill out form","Name",nameTemp,"Title",titleTemp,"Add Skill",skillTemp,"Availability\nCalendar",availableTemp,"Pay Rate",payrateTemp};
+	    //Input message with the textfields
+	      int result = JOptionPane.showConfirmDialog(null, fields,"Add Resource", JOptionPane.OK_CANCEL_OPTION,JOptionPane.INFORMATION_MESSAGE);
+	      if (result == JOptionPane.OK_OPTION) {
+	    	  String name = nameTemp.getText();
+	    	  String title=titleTemp.getText();
+	    	  String skill=skillTemp.getText();
+	    	  String availabilityCalendar  = availableTemp.getText();
+                  String payrate=skillTemp.getText();
+	    	//if the user hasn't entered anything and clicked OK 
+	    	  if (name == ""&& title==""&& skill=="") {
+	    		  JOptionPane.showMessageDialog(null, "Invalid input.\nCan't create Resource.\n Try Again");	
+	    		//restarting the method.
+	    		  inputAdd();
+	    		  } 	  
+	    	  	  
+	    	 strings[0]=name;
+                 strings[1]=title;
+                 strings[2]=skill;
+                 strings[3]=availabilityCalendar;
+                 strings[4]=payrate;
+	      }
+	      return strings;
+	  }
+    
+    
 }
