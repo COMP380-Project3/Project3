@@ -3,6 +3,7 @@ import java.util.LinkedList;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -138,6 +139,8 @@ public class ActionItems_GUI extends javax.swing.JFrame {
 			}
 		});
 
+		table.removeColumn(table.getColumnModel().getColumn(5));
+		
 		this.model = (DefaultTableModel) table.getModel();
 		table.getTableHeader().setReorderingAllowed(false);
 		jScrollPane1.setViewportView(table);
