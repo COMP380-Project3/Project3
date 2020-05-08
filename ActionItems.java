@@ -1,5 +1,8 @@
 import java.time.LocalDate;
 import java.util.UUID;
+import java.io.*;
+import java.util.LinkedList;
+import java.util.Scanner;
 
 //public class ActionItem extends Issues{ // is what i would put if i had an issues class
 public class ActionItems{
@@ -19,13 +22,8 @@ public class ActionItems{
 	ActionItems(){
 		uniqueID = generateUniqueID();
 		setName("");
-		setDescription("");
-		if(dateCreated.isEmpty()) {
-			setTodayDate();
-		}else {
-			setTodayDate(dateCreated);
-		}
-		setResources(resourceName);
+		setDescription("");setTodayDate("");
+		setResources("");
 		setExpectedCompletionDate("");
 		setActualCompletionDate("");
 		setStatus("");
@@ -34,8 +32,8 @@ public class ActionItems{
 
 	//constructor with items
 	ActionItems(String name, String description, String dateCreated, String resourceName,
-			   String expectedCompletionDate, String actualCompletionDate,
-			   String status, String statusDescription){
+			String expectedCompletionDate, String actualCompletionDate,
+			String status, String statusDescription){
 		uniqueID = generateUniqueID();
 		setName(name);
 		setDescription(description);
@@ -52,9 +50,9 @@ public class ActionItems{
 		setUpdateDate();
 	}
 
-  ActionItems(String name, String description, String dateCreated, String resourceName,
-			   String dateAssigned, String expectedCompletionDate, String actualCompletionDate,
-			   String status, String statusDescription, String updateDate){
+	ActionItems(String name, String description, String dateCreated, String resourceName,
+			String dateAssigned, String expectedCompletionDate, String actualCompletionDate,
+			String status, String statusDescription, String updateDate){
 		uniqueID = generateUniqueID();
 		setName(name);
 		setDescription(description);
@@ -63,7 +61,27 @@ public class ActionItems{
 		}else {
 			setTodayDate(dateCreated);
 		}
-		setResources(resourceName, 1);
+		if(resourceName.isEmpty() && dateAssigned.isEmpty()) {
+			setResources("", "");
+		}else if(dateAssigned.isEmpty()){
+			setResources(resourceName, "");
+		}else{
+			setResources(resourceName, dateAssigned);
+		}
+		setExpectedCompletionDate(expectedCompletionDate);
+		setActualCompletionDate(actualCompletionDate);
+		setStatus(status);
+		setStatusDescription(statusDescription);
+		setUpdateDate();
+	}
+	ActionItems(String uniqueID, String name, String description, String dateCreated, String resourceName,
+			String dateAssigned, String expectedCompletionDate, String actualCompletionDate,
+			String status, String statusDescription, String updateDate){
+		this.uniqueID = uniqueID;
+		setName(name);
+		setDescription(description);
+		setTodayDate(dateCreated);
+		setResources(resourceName, dateAssigned);
 		setExpectedCompletionDate(expectedCompletionDate);
 		setActualCompletionDate(actualCompletionDate);
 		setStatus(status);
@@ -112,10 +130,19 @@ public class ActionItems{
 		LocalDate today = LocalDate.now(); //automatically assign a date when a resource is assigned
 		dateAssigned = today.toString();
 	}
-  public void setResources(String names, int a) {
-		resourceName = names;
-		LocalDate today = LocalDate.now(); //automatically assign a date when a resource is assigned
-		dateAssigned = today.toString();
+	public void setResources(String names, String date) {
+		if(names.isEmpty() && date.isEmpty()){
+			resourceName = "";
+			dateAssigned = "";
+		}else if(date.isEmpty()){
+			resourceName = names;
+			LocalDate today = LocalDate.now(); //automatically assign a date when a resource is assigned
+			dateAssigned = today.toString();
+		}else{
+			resourceName = names;
+			//LocalDate today = LocalDate.now(); //automatically assign a date when a resource is assigned
+			dateAssigned = date;
+		}
 	}
 
 	public String getExpectedCompletionDate() {
@@ -155,5 +182,74 @@ public class ActionItems{
 		LocalDate today = LocalDate.now(); //automatically assign a date when a resource is assigned
 		updateDate = today.toString();
 	}
+
+	public String toString(){
+		String rtn =  "";
+		rtn = uniqueID +":" + name + ":" + description + ":" + dateCreated + ":" + resourceName + ":" + dateAssigned + ":" +
+				expectedCompletionDate + ":" + actualCompletionDate + ":" + status + ":" + statusDescription + ":" + updateDate +"\n";
+		return rtn;
+	}
+
+	//save the linked list into a text document
+	public void save(LinkedList<ActionItems> item){
+		try {
+			//create file if there isnt one
+			File myObj = new File("ActionItem.txt");
+			if (myObj.createNewFile()) {
+				System.out.println("File created: " + myObj.getName());
+			} else {
+				System.out.println("File already exists.");
+			}
+			try {
+
+				//write to the file
+				FileWriter myWriter = new FileWriter("ActionItem.txt");
+				//myWriter.write("Files in Java might be tricky, but it is fun enough!");
+				for(int i = 0; i < item.size(); i++){
+					myWriter.write(item.get(i).toString());
+				}
+
+				myWriter.close();
+				System.out.println("Successfully wrote to the file.");
+			} catch (IOException e) {
+				System.out.println("An error occurred.");
+				e.printStackTrace();
+			}
+
+		} catch (IOException e) {
+			System.out.println("An error occurred.");
+			e.printStackTrace();
+		}
+	}
+
+	//load a new item into the linked list
+	public LinkedList<ActionItems> load(){
+		LinkedList<ActionItems> item = new LinkedList<ActionItems>();
+		try {
+			//create file if there isnt one
+			File myObj = new File("ActionItem.txt");
+			if (myObj.createNewFile()) {
+				System.out.println("File created: " + myObj.getName());
+			} else {
+				System.out.println("File already exists.");
+				Scanner reader = new Scanner(myObj);
+				String[] temp = new String[11];
+				String tempIN;
+				while(reader.hasNext()) {
+
+					tempIN = reader.nextLine();
+					temp= tempIN.split(":");
+					System.out.println("tempIN values = " + temp);
+					item.add(new ActionItems(temp[0], temp[1], temp[2], temp[3], temp[4], temp[5], temp[6], temp[7], temp[8], temp[9], temp[10]));
+				}
+			}
+		}catch (IOException e) {
+			System.out.println("An error occurred.");
+			e.printStackTrace();
+		}
+
+		return item;
+	}
+
 
 }

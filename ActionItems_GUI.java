@@ -24,10 +24,15 @@ public class ActionItems_GUI extends javax.swing.JFrame {
 	 * Creates new form Resources
 	 */
 
-   LinkedList<ActionItems> actionItemList = new LinkedList<ActionItems>();
+  LinkedList<ActionItems> actionItemList = new LinkedList<ActionItems>();
+  int rowNumber = 0;
 
 	public ActionItems_GUI() {
 		initComponents();
+
+		ActionItems temp = new ActionItems(); //initialize a temporary action item to call action item functions
+		actionItemList = temp.load(); //load items to the linked list
+		if (actionItemList.size() > 0) loadRows(); //load rows onto the table if there is any items in the list
 	}
 
 	/**
@@ -92,6 +97,25 @@ public class ActionItems_GUI extends javax.swing.JFrame {
 			}
 		});
 
+		
+    //click the row functionality
+    table.addMouseListener(new MouseAdapter() {
+      public void mousePressed(MouseEvent mouseEvent) {
+          JTable table =(JTable) mouseEvent.getSource();
+          Point point = mouseEvent.getPoint();
+          int row = table.rowAtPoint(point);
+          if (mouseEvent.getClickCount() == 2 && table.getSelectedRow() != -1) { //double click functionality
+              System.out.println("[double click] row = " + row);
+              rowNumber = row;
+              moreInfoMenu();
+          }
+          if (mouseEvent.getClickCount() == 1 && table.getSelectedRow() != -1) { //single click functionality
+              System.out.println("[single click] row = " + row);
+              rowNumber = row;
+          }
+      }
+    });
+
 		table.setModel(new javax.swing.table.DefaultTableModel(
 				new Object [][] {},
 				new String [] {
@@ -113,6 +137,7 @@ public class ActionItems_GUI extends javax.swing.JFrame {
 				return canEdit [columnIndex];
 			}
 		});
+
 		this.model = (DefaultTableModel) table.getModel();
 		table.getTableHeader().setReorderingAllowed(false);
 		jScrollPane1.setViewportView(table);
@@ -125,11 +150,12 @@ public class ActionItems_GUI extends javax.swing.JFrame {
 		});
 
 		updateButton.setText("Update");
-		updateButton.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				UpdateButtonActionPerformed(evt);
-			}
-		});
+    updateButton.setVisible(false);
+		// updateButton.addActionListener(new java.awt.event.ActionListener() {
+		// 	public void actionPerformed(java.awt.event.ActionEvent evt) {
+		// 		UpdateButtonActionPerformed(evt);
+		// 	}
+		// });
 
 		deleteButton.setText("Delete");
 		deleteButton.addActionListener(new java.awt.event.ActionListener() {
@@ -242,24 +268,28 @@ public class ActionItems_GUI extends javax.swing.JFrame {
 	}
 
 	private void DeliverablesButtonActionPerformed(java.awt.event.ActionEvent evt) {
+    actionItemList.get(0).save(actionItemList);
 		Deliverables_GUI deliverables = new Deliverables_GUI();
 		deliverables.setVisible(true);
 		setVisible(false);
 	}
 
 	private void TasksButtonActionPerformed(java.awt.event.ActionEvent evt) {
+    actionItemList.get(0).save(actionItemList);
 		Task_GUI task=new Task_GUI();
 		task.setVisible(true);
 		setVisible(false);
 	}
 
 	private void ResourcesButtonActionPerformed(java.awt.event.ActionEvent evt) {
+    actionItemList.get(0).save(actionItemList);
 		Resources_GUI resource=new Resources_GUI();
 		resource.setVisible(true);
 		setVisible(false);
 	}
 
 	private void IssuesButtonActionPerformed(java.awt.event.ActionEvent evt) {
+    actionItemList.get(0).save(actionItemList);
 		Issues_GUI issues = new Issues_GUI();
 		issues.setVisible(true);
 		setVisible(false);
@@ -270,37 +300,69 @@ public class ActionItems_GUI extends javax.swing.JFrame {
 		String [] inputs = inputAdd();
     ActionItems actionItem = new ActionItems(inputs[0], inputs[1],inputs[2],inputs[3],inputs[4],inputs[5],
                                             inputs[6],inputs[7],inputs[8],inputs[9]);
-		Object[] row = new Object [6];
+	Object[] row = new Object [6];
     row[0] = inputs[7]; //status
   	row[1] = inputs[0]; //name
     row[2] = inputs[3]; //resource
-    row[3] = inputs[2]; //dateCreated
+    if(inputs[2].equals("")){
+      row[3] = actionItem.dateCreated;
+    }else{
+      row[3] = inputs[2]; //dateCreated
+    }
     row[4] = inputs[5]; //expected
     row[5] = actionItem.uniqueID;
     actionItemList.add(actionItem);
-    System.out.println("in create button " + actionItem.uniqueID);
+    System.out.println("added " + actionItem + " to the list");
+    System.out.println("in create button [" + actionItem.uniqueID +"]");
 		model.addRow(row);
+    actionItemList.get(0).save(actionItemList);
     //System.out.println("# of row = " + model.getColumnCount());
     //model.insertRow(actionItem.uniqueID, row);
 	}
 
-	private void UpdateButtonActionPerformed(java.awt.event.ActionEvent evt) {
-		// TODO add your handling code here:
-	}
+	// private void UpdateButtonActionPerformed(java.awt.event.ActionEvent evt) {
+	// 	// TODO add your handling code here:
+	// }
 
 	private void deleteButtonActionPerformed(java.awt.event.ActionEvent evt) {
 		//this.tasks.remove(selectedRowIndex);
+    System.out.println("ActionItemList size = " +  actionItemList.size());
+    if(model.getRowCount() == 0) {
+      System.out.println("Insufficient # of rows.");
+      return;
+    }
+
+    String rowUniqueID = table.getModel().getValueAt(rowNumber, 5).toString();
+    int indexFound = -1;
+    ActionItems current = null;
+    for(int i = 0; i < actionItemList.size(); i++){
+      if(actionItemList.get(i).uniqueID.equals(rowUniqueID)){
+        current = actionItemList.get(i);
+        indexFound = i;
+        break;
+      }
+    }
+    System.out.println("removed " + actionItemList.get(indexFound) + " in the list");
+    actionItemList.remove(indexFound);
+    System.out.println("Successfully removed item from linked list.");
+
     System.out.println("Selected row index: " + selectedRowIndex);
-		model.removeRow(selectedRowIndex);
-    //actonItemList.remove()
+    model.removeRow(rowNumber);
+    actionItemList.get(0).save(actionItemList);
 	}
 
 	private void EditButtonActionPerformed(java.awt.event.ActionEvent evt) {
 		// TODO add your handling code here:
+    if(model.getRowCount() == 0) {
+      System.out.println("Insufficient # of rows.");
+      return;
+    }
     inputEdit();
+    actionItemList.get(0).save(actionItemList);
 	}
 
 	private void HomeButtonActionPerformed(java.awt.event.ActionEvent evt) {
+    actionItemList.get(0).save(actionItemList);
 		HomePage home=new HomePage();
 		home.setVisible(true);
 		setVisible(false);
@@ -393,14 +455,12 @@ public class ActionItems_GUI extends javax.swing.JFrame {
 			String updateDate=updateDateTemp.getText();
 			//String end  = endTemp.getText();
 			//if the user hasn't entered anything and clicked OK
-			if (name == "" || description =="" || resource =="" || expected == "" || actual =="" || status =="" || statusDescription == "") {
-				JOptionPane.showMessageDialog(null, "Wrong input\n\n try Again");
+			if (name.equals("") && description.equals("") && expected.equals("") && status.equals("")) {
+				JOptionPane.showMessageDialog(null, "Wrong Input\n\n Try Again");
 				//restarting the method.
 				inputAdd();
 			}
 
-
-			//strings[0] = ActionItems.generateUniqueID();
 			strings[0] = name;
 			strings[1] = description;
 			strings[2] = dateCreated;
@@ -410,16 +470,158 @@ public class ActionItems_GUI extends javax.swing.JFrame {
 			strings[6] = actual;
 			strings[7] = status;
 			strings[8] = statusDescription;
-      strings[9] = updateDate;
+			strings[9] = updateDate;
 		}
 		return strings;
 	}
 
-  public String[] inputEdit(){
-    //ActionItems values = actionItemList.get(actionItemList.indexOf(model.getValueAt(selectedRowIndex, 5)));
-    //ActionItems currentItem = actionItemList.get();
-    //System.out.println("in edit " + values.uniqueID);
-    return null;
+  public void inputEdit(){
+    System.out.println("rowNumber = "+ rowNumber);
+    System.out.println("Unique ID = " + table.getModel().getValueAt(rowNumber, 5).toString());
+
+    String rowUniqueID = table.getModel().getValueAt(rowNumber, 5).toString();
+    int indexFound = -1;
+    ActionItems current = null;
+    for(int i = 0; i < actionItemList.size(); i++){
+      if(actionItemList.get(i).uniqueID.equals(rowUniqueID)){
+        current = actionItemList.get(i);
+        indexFound = i;
+        break;
+      }
+    }
+
+    System.out.println("Current uniqueID = " + current.uniqueID);
+
+    //edit values
+    String[] values = modifyInput(current);
+
+    current.name = values[0];
+    current.description = values[1];
+    current.dateCreated = values[2];
+    current.resourceName = values[3];
+    current.dateAssigned = values[4];
+    current.expectedCompletionDate = values[5];
+    current.actualCompletionDate = values[6];
+    current.status = values[7];
+    current.statusDescription = values[8];
+    current.updateDate = values[9];
+    actionItemList.set(indexFound, current);
+
+    Object[] row = new Object [6];
+    row[0] = values[7]; //status
+  	row[1] = values[0]; //name
+    row[2] = values[3]; //resource
+    row[3] = values[2]; //dateCreated
+    row[4] = values[5]; //expected
+    row[5] = current.uniqueID;
+
+    model.removeRow(rowNumber);
+	model.insertRow(rowNumber, row);
+    System.out.println("added " + current + " to the list");
+
+  }
+
+  //edit the input
+  public String[] modifyInput(ActionItems item){
+    String[] strings = new String[10];
+		JTextField nameTemp= new JTextField(20);
+      nameTemp.setText(item.name); //preload the text field with previously set values
+		JTextField descriptionTemp = new JTextField(50);
+      descriptionTemp.setText(item.description);
+		JTextField todayDateTemp = new JTextField(10); //date created
+      todayDateTemp.setText(item.dateCreated);
+		JTextField resourceTemp = new JTextField(20);
+      resourceTemp.setText(item.resourceName);
+		JTextField dateAssignedTemp = new JTextField(10);
+      dateAssignedTemp.setText(item.dateAssigned);
+		JTextField expectionTemp= new JTextField(10);
+      expectionTemp.setText(item.expectedCompletionDate);
+		JTextField actualDateTemp = new JTextField(10);
+      actualDateTemp.setText(item.actualCompletionDate);
+		JTextField statusTemp = new JTextField(10);
+      statusTemp.setText(item.status);
+		JTextField sDescriptionTemp = new JTextField(50);
+      sDescriptionTemp.setText(item.statusDescription);
+		JTextField updateDateTemp = new JTextField(10);
+      updateDateTemp.setText(item.updateDate);
+		Object[] fields= {"Edit Action Item","Name",nameTemp,"Description",descriptionTemp,"Date Created",todayDateTemp,
+				"Resource",resourceTemp,"Date Assigned",dateAssignedTemp,"Expected Completion Date",expectionTemp,
+				"Actual Completion Date", actualDateTemp, "Status",statusTemp,"Status Description",sDescriptionTemp,"Update Date",updateDateTemp};
+		//Input message with the textfields
+		int result = JOptionPane.showConfirmDialog(null, fields,
+				"Add Product", JOptionPane.OK_CANCEL_OPTION,JOptionPane.INFORMATION_MESSAGE);
+		if (result == JOptionPane.OK_OPTION) {
+			String name = nameTemp.getText();
+			String description = descriptionTemp.getText();
+			String dateCreated = todayDateTemp.getText();
+			String resource = resourceTemp.getText();
+			String dateAssigned = dateAssignedTemp.getText();
+			String expected=expectionTemp.getText();
+			String actual=actualDateTemp.getText();
+			String assignedDate  = dateAssignedTemp.getText();
+			String status = statusTemp.getText();
+			String statusDescription=sDescriptionTemp.getText();
+			String updateDate=updateDateTemp.getText();
+			//String end  = endTemp.getText();
+			//if the user hasn't entered anything and clicked OK
+			if (name.equals("") && description.equals("") && expected.equals("") && status.equals("")) {
+				JOptionPane.showMessageDialog(null, "Wrong Input\n\n Try Again");
+				//restarting the method.
+				modifyInput(item);
+			}
+
+			strings[0] = name;
+			strings[1] = description;
+			strings[2] = dateCreated;
+			strings[3] = resource;
+			strings[4] = dateAssigned;
+			strings[5] = expected;
+			strings[6] = actual;
+			strings[7] = status;
+			strings[8] = statusDescription;
+			strings[9] = updateDate;
+		}
+    return strings;
+  }
+
+  //popup on double click //show the information of the form
+  public void moreInfoMenu(){
+    String rowUniqueID = table.getModel().getValueAt(rowNumber, 5).toString();
+    int indexFound = -1;
+    ActionItems current = null;
+    for(int i = 0; i < actionItemList.size(); i++){
+      if(actionItemList.get(i).uniqueID.equals(rowUniqueID)){
+        current = actionItemList.get(i);
+        indexFound = i;
+        break;
+      }
+    }
+    String inputValueString = "Action Item form | Date Updated: "+current.updateDate +" | Status: "+ current.status +
+                              "\n\nName: "+current.name+
+                              "\nDescription: "+current.description+
+                              "\nDate Created: "+current.dateCreated+
+                              "\nResource: "+current.resourceName+
+                              "\nDate Assigned: "+current.dateAssigned+
+                              "\nExpected Completion Date: "+current.expectedCompletionDate+
+                              "\nActual Completion Date: " + current.actualCompletionDate+
+                              "\nStatus Description: "+current.statusDescription+
+                              "\n\n\nUnique ID: "+current.uniqueID+"\n";
+    JOptionPane.showMessageDialog(resource_Info, inputValueString);
+  }
+
+  //load rows if there is items in the list
+  public void loadRows() { 
+	  Object[] row = new Object [6];
+	  for(int i = 0; i < actionItemList.size(); i++) {
+		row[0] = actionItemList.get(i).status; //status
+	  	row[1] = actionItemList.get(i).name; //name
+	    row[2] = actionItemList.get(i).resourceName; //resource
+	    row[3] = actionItemList.get(i).dateCreated; //dateCreated
+	    row[4] = actionItemList.get(i).expectedCompletionDate; //expected
+	    row[5] = actionItemList.get(i).uniqueID;
+	    model.addRow(row);
+	  }
+
   }
 
 }
