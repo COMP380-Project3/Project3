@@ -1,57 +1,12 @@
-/*
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">                          
-    private void initComponents() {
+import java.util.LinkedList;
 
-        jPopupMenu1 = new javax.swing.JPopupMenu();
-        jPopupMenu2 = new javax.swing.JPopupMenu();
-        jPopupMenu3 = new javax.swing.JPopupMenu();
-        jButton1 = new javax.swing.JButton();
-
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
-        jButton1.setText("jButton1");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(150, 150, 150)
-                .addComponent(jButton1)
-                .addContainerGap(177, Short.MAX_VALUE))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(103, 103, 103)
-                .addComponent(jButton1)
-                .addContainerGap(174, Short.MAX_VALUE))
-        );
-
-        pack();
-    }// </editor-fold>                        
-
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {                                         
-        // TODO add your handling code here:
-    }                                        
-
-
-    // Variables declaration - do not modify                     
-    private javax.swing.JButton jButton1;
-    private javax.swing.JPopupMenu jPopupMenu1;
-    private javax.swing.JPopupMenu jPopupMenu2;
-    private javax.swing.JPopupMenu jPopupMenu3;
-    // End of variables declaration                   
-}*/
 import javax.swing.JOptionPane;
-import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.io.Serializable;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -68,9 +23,19 @@ public class Resources_GUI extends javax.swing.JFrame {
     /**
      * Creates new form Resources
      */
+    LinkedList<Resource> resourceList = new LinkedList<Resource>();
+  int rowNumber = 0;
+    private DefaultTableModel model;
+    private int selectedRowIndex;
+    
     public Resources_GUI() {
         initComponents();
-    }
+        
+        Resource temp = new Resource(); //initialize a temporary resource  to call action item functions
+		resourceList = temp.load(); //load items to the linked list
+		if (resourceList.size() > 0) loadRows(); //load rows onto the table if there is any items in the list
+    
+        }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -134,36 +99,52 @@ public class Resources_GUI extends javax.swing.JFrame {
 
         resourcesButton.setText("Resources");
         
-        JScrollPane scrollPane = new JScrollPane(table);
-        table.setFillsViewportHeight(true);
+        //click the row functionality
+    table.addMouseListener(new MouseAdapter() {
+      public void mousePressed(MouseEvent mouseEvent) {
+          JTable table =(JTable) mouseEvent.getSource();
+          Point point = mouseEvent.getPoint();
+          int row = table.rowAtPoint(point);
+          if (mouseEvent.getClickCount() == 2 && table.getSelectedRow() != -1) { //double click functionality
+              System.out.println("[double click] row = " + row);
+              rowNumber = row;
+              moreInfoMenu();
+          }
+          if (mouseEvent.getClickCount() == 1 && table.getSelectedRow() != -1) { //single click functionality
+              System.out.println("[single click] row = " + row);
+              rowNumber = row;
+          }
+      }
+    });
+        
         table.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {},
-            new String [] { "ID","Name", "Title", "Type", "Status", "Date Created", "Skills", "Task Assigned" }
-                
-        ) {
-            Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Object.class
-            };
-            boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false
-            };
-            boolean[] rowSelectionAllowed = new boolean [] {
-                true, true, true, true, true, true
-            };
-            
+				new Object [][] {},
+				new String [] {
+						"ID", "Name", "Title", "Skills", "Pay Rate", "Tasks Assigned" , "Status"
+				}
+				) {
+			Class[] types = new Class [] {
+					java.lang.String.class,java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Object.class
+			};
+			boolean[] canEdit = new boolean [] {
+					false, false, false, false, false, false
+			};
 
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
-            }
+			public Class getColumnClass(int columnIndex) {
+				return types [columnIndex];
+			}
 
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
+			public boolean isCellEditable(int rowIndex, int columnIndex) {
+				return canEdit [columnIndex];
+			}
+
+		});
+        this.model = (DefaultTableModel) table.getModel();
+
         table.getTableHeader().setReorderingAllowed(false);
         jScrollPane1.setViewportView(table);
 
-        createButton.setText("create");
+        createButton.setText("Create");
         createButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 CreateButtonActionPerformed(evt);
@@ -171,11 +152,12 @@ public class Resources_GUI extends javax.swing.JFrame {
         });
 
         updateButton.setText("Update");
-        updateButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                UpdateButtonActionPerformed(evt);
-            }
-        });
+        updateButton.setVisible(false);
+        //updateButton.addActionListener(new java.awt.event.ActionListener() {
+           // public void actionPerformed(java.awt.event.ActionEvent evt) {
+               // UpdateButtonActionPerformed(evt);
+           // }
+        //});
 
         deleteButton.setText("Delete");
         deleteButton.addActionListener(new java.awt.event.ActionListener() {
@@ -197,8 +179,7 @@ public class Resources_GUI extends javax.swing.JFrame {
                 HomeButtonActionPerformed(evt);
             }
         });
-        this.model = (DefaultTableModel) table.getModel(); 
-        
+
         javax.swing.GroupLayout resource_InfoLayout = new javax.swing.GroupLayout(resource_Info);
         resource_Info.setLayout(resource_InfoLayout);
         resource_InfoLayout.setHorizontalGroup(
@@ -276,70 +257,124 @@ public class Resources_GUI extends javax.swing.JFrame {
         );
 
         pack();
-    }// </editor-fold> 
-	
-	@SuppressWarnings("unused")
-	private void TableMouseClicked(java.awt.event.MouseEvent evt) {                                   
-        this.selectedRowIndex = table.getSelectedRow();
-   }
+    }// </editor-fold>                        
 
+    
+    
+    private void TableMouseClicked(java.awt.event.MouseAdapter evt) {
+		this.selectedRowIndex = table.getSelectedRow();
+    System.out.println("Selected Row Index = " + table.getSelectedRow());
+	}
+    
     private void DeliverablesButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                   
-    	 Deliverables_GUI deliverables = new Deliverables_GUI();
+        resourceList.get(0).save(resourceList); 
+        Deliverables_GUI deliverables = new Deliverables_GUI();
          deliverables.setVisible(true);
          setVisible(false);
     }                                                  
 
     private void TasksButtonActionPerformed(java.awt.event.ActionEvent evt) {                                            
-    	Task_GUI tasks=new Task_GUI();
+        resourceList.get(0).save(resourceList);
+        Task_GUI tasks=new Task_GUI();
         tasks.setVisible(true);
         setVisible(false);
     }                                           
 
     private void ActionItemsButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                  
-    	ActionItems_GUI actionItems=new ActionItems_GUI();
+        resourceList.get(0).save(resourceList);
+        ActionItems_GUI actionItems=new ActionItems_GUI();
         actionItems.setVisible(true);
         setVisible(false);
     }                                                 
 
     private void IssuesButtonActionPerformed(java.awt.event.ActionEvent evt) {                                             
-    	Issues_GUI issues = new Issues_GUI();
+        resourceList.get(0).save(resourceList);
+        Issues_GUI issues = new Issues_GUI();
         issues.setVisible(true);
         setVisible(false);
     } 
     
 
     private void CreateButtonActionPerformed(java.awt.event.ActionEvent evt) {                                             
-    	 String [] inputs = inputAdd();
-         //Resource resource = new Resource(inputs[0],inputs[2],inputs[3],inputs[1],inputs[3],inputs[1]);
-         //this.resource.add(resource);
-         /*Object[] row = new Object [4];
-         for (int i=0;i<5;i++) {
-         	table.row[0]col[1] = tasks.get(i).getName();
-         	row[1] = tasks.get(i).getType();
-         	row[2] = tasks.get(i).getExpectedStartDate();
-         	row[3] = tasks.get(i).getExpectedEndDate();
-        	
-                
-         }
-         //model.addRow(row);
-    }   */           
-    }
+      String [] inputs = inputAdd();
+    Resource resource = new Resource(inputs[0], inputs[1],inputs[2],inputs[3],inputs[4],inputs[5],
+                                            inputs[6]);
+    Object[] row = new Object [8];
+    row[0] = resource.uniqueID; //id
+    row[1] = inputs[0]; //name
+    row[2] = inputs[1]; //title
+    row[3] = inputs[2];//skill
+    /*if(inputs[2].equals(resource.skills)){ //if skill already added
+      row[3] = inputs[2];
+      //row[3] = resource.skills + inputs[2];//new skill added
+    }else{
+      row[3] = inputs[2]; // if new skill
+    }*/
+    row[4] = inputs[3]; //payrate
+    row[5] = inputs[4];//tasks
+    /*if(inputs[4].equals(resource.assignedTasks)){ //if task already added
+      row[5] = resource.assignedTasks + inputs[4];//new task added
+    }else{
+      row[5] = inputs[4]; // if new task
+    }*/
+    row[6] = inputs[5]; //availability
+    row[7] = inputs[6]; //status
+    resourceList.add(resource);
+    System.out.println("added " + resource + " to the list");
+    System.out.println("in create button [" + resource.uniqueID +"]");
+    model.addRow(row);
+    resourceList.get(0).save(resourceList);
+    //System.out.println("# of row = " + model.getColumnCount());
+    //model.insertRow(actionItem.uniqueID, row);
+	}
+    
 
     private void UpdateButtonActionPerformed(java.awt.event.ActionEvent evt) {                                             
         // TODO add your handling code here:
     }                                            
 
     private void DeleteButtonActionPerformed(java.awt.event.ActionEvent evt) {                                             
-        //this.tasks.remove(selectedRowIndex); you need to put your resources list.
-        model.removeRow(selectedRowIndex);
-    }                                            
+       System.out.println("resourceList size = " +  resourceList.size());
+    if(model.getRowCount() == 0) {
+      System.out.println("Insufficient # of rows.");
+      return;
+    }
+
+    String rowUniqueID = table.getModel().getValueAt(rowNumber, 0).toString();
+    int indexFound = -1;
+    Resource current = null;
+    for(int i = 0; i < resourceList.size(); i++){
+      if(resourceList.get(i).uniqueID.equals(rowUniqueID)){
+        current = resourceList.get(i);
+        indexFound = i;
+        break;
+      }
+    }
+    System.out.println("removed " + resourceList.get(indexFound) + " in the list");
+    resourceList.remove(indexFound);
+    System.out.println("Successfully removed item from linked list.");
+
+    System.out.println("Selected row index: " + selectedRowIndex);
+    model.removeRow(rowNumber);
+    resourceList.get(0).save(resourceList);
+    }
+    
+    
+    
+                                              
 
     private void EditButtonActionPerformed(java.awt.event.ActionEvent evt) {                                           
-        // TODO add your handling code here:
-    }                                          
+      if(model.getRowCount() == 0) {
+      System.out.println("Insufficient # of rows.");
+      return;
+    }
+    inputEdit();
+    resourceList.get(0).save(resourceList);
+    }                                        
 
     private void HomeButtonActionPerformed(java.awt.event.ActionEvent evt) {                                           
-    	HomePage home=new HomePage();
+    	resourceList.get(0).save(resourceList);
+        HomePage home=new HomePage();
         home.setVisible(true);
         setVisible(false);  
     }                                          
@@ -394,43 +429,182 @@ public class Resources_GUI extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private java.awt.Panel resource_Info;
     private javax.swing.JTable table;
-    private DefaultTableModel model;
-    int selectedRowIndex;
-    // End of variables declaration
-    
+    // End of variables declaration     
     
     public static String[] inputAdd() {
-		  String[] strings = new String[5]; 
-	      JTextField nameTemp= new JTextField(10);
-	      JTextField titleTemp = new JTextField(10);
-	      //JTextField statusTemp = new JTextField(10);
-	      JTextField skillTemp = new JTextField(10);
-              JTextField availableTemp = new JTextField(10);
-              JTextField payrateTemp = new JTextField(10);
-	      Object[] fields= {"Please fill out form","Name",nameTemp,"Title",titleTemp,"Add Skill",skillTemp,"Availability\nCalendar",availableTemp,"Pay Rate",payrateTemp};
-	    //Input message with the textfields
-	      int result = JOptionPane.showConfirmDialog(null, fields,"Add Resource", JOptionPane.OK_CANCEL_OPTION,JOptionPane.INFORMATION_MESSAGE);
-	      if (result == JOptionPane.OK_OPTION) {
-	    	  String name = nameTemp.getText();
-	    	  String title=titleTemp.getText();
-	    	  String skill=skillTemp.getText();
-	    	  String availabilityCalendar  = availableTemp.getText();
-                  String payrate=skillTemp.getText();
-	    	//if the user hasn't entered anything and clicked OK 
-	    	  if (name == ""&& title==""&& skill=="") {
-	    		  JOptionPane.showMessageDialog(null, "Invalid input.\nCan't create Resource.\n Try Again");	
-	    		//restarting the method.
-	    		  inputAdd();
-	    		  } 	  
-	    	  	  
-	    	 strings[0]=name;
-                 strings[1]=title;
-                 strings[2]=skill;
-                 strings[3]=availabilityCalendar;
-                 strings[4]=payrate;
-	      }
-	      return strings;
+		String[] strings = new String[7];
+		JTextField nameTemp= new JTextField(20);
+		JTextField titleTemp = new JTextField(50);
+		JTextField skillTemp = new JTextField(10); 
+		JTextField payRateTemp = new JTextField(20);
+		JTextField assignedTasksTemp = new JTextField(10);
+		JTextField availabilityTemp= new JTextField(10);
+		JTextField statusTemp = new JTextField(10);
+
+		Object[] fields= {"Create new Resource","Name",nameTemp,"Title",titleTemp,"Skills", skillTemp, "Pay Rate",payRateTemp,
+				"Tasks Assigned",assignedTasksTemp,"Availability Calendar",availabilityTemp,"Status",statusTemp};
+		//Input message with the textfields
+		int result = JOptionPane.showConfirmDialog(null, fields,
+				"Add Product", JOptionPane.OK_CANCEL_OPTION,JOptionPane.INFORMATION_MESSAGE);
+		if (result == JOptionPane.OK_OPTION) {
+			String name = nameTemp.getText();
+			String title = titleTemp.getText();
+			String skill = skillTemp.getText();
+			String payRate = payRateTemp.getText();
+			String assignedTasks = assignedTasksTemp.getText();
+			String availability=availabilityTemp.getText();
+			String status = statusTemp.getText();
+
+			//String end  = endTemp.getText();
+			//if the user hasn't entered anything and clicked OK
+			if (name.equals("") && title.equals("") && skill.equals("") && status.equals("")) {
+				JOptionPane.showMessageDialog(null, "Wrong Input\n\n Try Again");
+				//restarting the method.
+				inputAdd();
+			}
+			strings[0] = name;
+			strings[1] = title;
+			strings[2] = skill;
+			strings[3] = payRate;
+			strings[4] = assignedTasks;
+			strings[5] = availability;
+			strings[6] = status;
+		}
+		return strings;
+	}
+    
+    public void inputEdit(){
+    System.out.println("rowNumber = "+ rowNumber);
+    System.out.println("Unique ID = " + table.getModel().getValueAt(rowNumber, 0).toString());
+
+    String rowUniqueID = table.getModel().getValueAt(rowNumber, 0).toString();
+    int indexFound = -1;
+    Resource current = null;
+    for(int i = 0; i < resourceList.size(); i++){
+      if(resourceList.get(i).uniqueID.equals(rowUniqueID)){
+        current = resourceList.get(i);
+        indexFound = i;
+        break;
+      }
+    }
+
+    System.out.println("Current uniqueID = " + current.uniqueID);
+
+    //edit values
+    String[] values = modifyInput(current);
+
+    current.name = values[0];
+    current.title = values[1];
+    current.skills = values[2];
+    current.payRate = values[3];
+    current.assignedTasks = values[4];
+    current.availability = values[5];
+    current.status = values[6];
+    resourceList.set(indexFound, current);
+
+    Object[] row = new Object [8];
+    row[0] = current.uniqueID; //id
+    row[1] = values[0]; //name
+    row[2] = values[1]; //title
+    row[3] = values[2]; //skills
+    row[4] = values[3]; //payrate
+    row[5] = values[4]; //tasks
+    row[6] = values[5]; //availability
+    row[7] = values[6]; //status
+
+    model.removeRow(rowNumber);
+	model.insertRow(rowNumber, row);
+    System.out.println("added " + current + " to the list");
+
+  }
+
+  //edit the input
+  public String[] modifyInput(Resource item){
+    String[] strings = new String[7];
+    JTextField nameTemp= new JTextField(20);
+    nameTemp.setText(item.name); //preload the text field with previously set values
+    JTextField titleTemp = new JTextField(50);
+    titleTemp.setText(item.title);
+    JTextField skillTemp = new JTextField(10); 
+    skillTemp.setText(item.skills);
+    JTextField payRateTemp = new JTextField(20);
+    payRateTemp.setText(item.payRate);
+    JTextField assignedTasksTemp = new JTextField(10);
+    assignedTasksTemp.setText(item.assignedTasks);
+    JTextField availabilityTemp= new JTextField(10);
+    availabilityTemp.setText(item.availability);
+    JTextField statusTemp = new JTextField(10);
+    statusTemp.setText(item.status);
+		
+		Object[] fields= {"Edit Resource","Name",nameTemp,"Title",titleTemp,"Skills", skillTemp, "Pay Rate",payRateTemp,
+				"Tasks Assigned",assignedTasksTemp,"Availability Calendar",availabilityTemp,"Status",statusTemp};
+		//Input message with the textfields
+		int result = JOptionPane.showConfirmDialog(null, fields,
+				"Edit Resource", JOptionPane.OK_CANCEL_OPTION,JOptionPane.INFORMATION_MESSAGE);
+		if (result == JOptionPane.OK_OPTION) {
+			String name = nameTemp.getText();
+			String title = titleTemp.getText();
+			String skills = skillTemp.getText();
+			String payRate = payRateTemp.getText();
+			String assignedTasks = assignedTasksTemp.getText();
+			String availability =availabilityTemp.getText();
+			String status = statusTemp.getText();
+			//String end  = endTemp.getText();
+			//if the user hasn't entered anything and clicked OK
+			if (name.equals("") && title.equals("") && skills.equals("") && status.equals("")) {
+				JOptionPane.showMessageDialog(null, "Wrong Input\n\n Try Again");
+				//restarting the method.
+				modifyInput(item);
+			}
+
+			strings[0] = name;
+			strings[1] = title;
+			strings[2] = skills;
+			strings[3] = payRate;
+			strings[4] = assignedTasks;
+			strings[5] = availability;
+			strings[6] = status;
+		}
+    return strings;
+  }
+
+  //popup on double click //show the information of the form
+  public void moreInfoMenu(){
+    String rowUniqueID = table.getModel().getValueAt(rowNumber, 6).toString();
+    int indexFound = -1;
+    Resource  current = null;
+    for(int i = 0; i < resourceList.size(); i++){
+      if(resourceList.get(i).uniqueID.equals(rowUniqueID)){
+        current = resourceList.get(i);
+        indexFound = i;
+        break;
+      }
+    }
+    String inputValueString = "Resource form "+
+                              "\n\nName: "+current.name+
+                              "\nTitle: "+current.title+
+                              "\nSkill: "+current.skills+
+                              "\nPay Rate: "+current.payRate+
+                              "\nTasks Assigned: "+current.assignedTasks+
+                              "\nAvailability: "+current.availability+
+                              "\nStatus: "+ current.status +
+                              "\n\n\nUnique ID: "+current.uniqueID+"\n";
+    JOptionPane.showMessageDialog(resource_Info, inputValueString);
+  }
+
+  //load rows if there is items in the list
+  public void loadRows() { 
+	  Object[] row = new Object [7];
+	  for(int i = 0; i < resourceList.size(); i++) {
+		row[0] = resourceList.get(i).uniqueID; //status
+	  	row[1] = resourceList.get(i).name; //name
+	    row[2] = resourceList.get(i).title; //resource
+	    row[3] = resourceList.get(i).skills; //skills
+            row[4] = resourceList.get(i).payRate; //payrate
+	    row[5] = resourceList.get(i).assignedTasks; //tasks assigned
+	    row[6] = resourceList.get(i).status; //status
+	    model.addRow(row);
 	  }
-    
-    
+
+  }  
 }
