@@ -20,6 +20,7 @@ public class Issues {
 	private String edirIssue;
 	private String deleteIssue;
 List of Action Items: arrayList<ActionItem>
+	
 List of Decisions: arrayList<Decisions>
        
 	private Issues [] issues;
@@ -178,7 +179,12 @@ date getUpdateDate() {
 public void getListofDecisions() {
 		return this.ListofDesisions;
 	}
- 
+ public void setListOfTasks (ArrayList<Issue> tasks) {
+    this.issue = issue;
+  }
+ public ArrayList<Tasks> getListOfTasks () {
+    return tasks;
+  }
       
 
 }
