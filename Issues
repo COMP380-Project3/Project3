@@ -12,44 +12,45 @@ public class Issues {
 	private Date expectedStartDate;
 	private Date expectedEndDate;
 	private Date actualEndDate;
+	private string status;
+	
 
   
-        private String editIssue;
+        private String createIssue;
+	private String edirIssue;
+	private String deleteIssue;
 
        
 	private Issues [] issues;
 
 
-	public void createIssue(String IssueName,String IssueDescription,Date expectedStart, Date expectedEnd, int expectedDuration
-
-			String type/*,Issue [] issues, Resource [] resources*/ ) {
-		this.IssueName=IssueName;		this.IssueDescription=IssueDescription;	this.expectedStartDate = expectedStart;
+	public void createIssue(String IssueName,String IssueDescription,Date expectedStart, Date expectedEnd, int expectedDuration,String severity,
+	,Issue [] issues, Resource [] resources*/ ) {
+		
+		this.IssueName=IssueName;		
+		this.IssueDescription=IssueDescription;	
+		this.expectedStartDate = expectedStart;
 		this.expectedEndDate = expectedEnd; 	
+		this.severity=severity;
+		this.status=status;
+		
 
 
 		if (type.toLowerCase() != "Issue" || type.toLowerCase() != "Issue Summary" || type.toLowerCase() != "" ) {
-
-			System.out.println("error with type of Issue");
-
-
+		System.out.println("error with type of Issue");
 
 		}
 
 		this.issues = issues;		
 	}
 	/**
-
-
-
 	 * Not implemented
-
-
-
 	 */
 
 
 
 	public void GenerateUniqueID () {
+	
 	}
 
 
@@ -61,23 +62,20 @@ public class Issues {
 	public void  updateExpectedEndDate(Date newDate) {this.expectedEndDate=newDate;}
 	public void  updateActualStartDate(Date newDate) {this.actualStartDate=newDate;}
 	public void  updateActualEndDate(Date newDate) {this.actualEndDate=newDate;}
-
-
         public void  updateSeverity(Date newDate) {this.Severity=newSev;}
-	
-	/*public void assignResource (Resource resource) {
+	public void updateStatus ( String newStatus) {this.status = newStatus;}
+	/*public void assignPriority (Priority priority) {
 
-	 	if (resources list is empty)
+	 	if (issue list is empty)
 
 	 		return, no resource to assign
 
 	 	else 
 
-	 		this.resources[this.resources.length()-1] = resource;
+			
+	 		this.issue[this.issue.length()-1] = priority;
 
 	 }*/
-
-
 
 
 
@@ -85,13 +83,9 @@ public class Issues {
  	if (issues list is empty)
 
  		return, no issue to assign
-
  	else 
-
  		this.issues[this.issues.length()-1] = issue;
 
  }*/
-
-
 
 }
