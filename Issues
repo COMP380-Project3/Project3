@@ -104,8 +104,80 @@ String task  = this.task;
 String association  = issue + task;
  }*/
  
+
+
+public void setName(String name) {
+		this.name = name;
+	}
+public void setDescription(String des) {
+		this.des = des;
+	}
+public void setPriority(String priority) {
+		this.priority = priority;
+	}
+public void setSeverity(String sev) {
+		this.sev = sev;
+	}
+public void setDateRaised(int date) {
+		this.date = date;
+	}
+public void setDateAssigned(int datea) {
+		this.datea = datea;
+	}
+public void setExpectedCompletionDate(int ex) {
+		this.ex = ex;
+	}
+public void setActualCompletionDate(Sint act) {
+		this.act = act;
+	}
+public void setStatus(String status) {
+		this.status = status;
+	}
+public void setStatusDescription(String statdes) {
+		this.statdes = statdes;
+	}
+public void setUpdateDate(int dateu) {
+		this.dateu = dateu;
+	}
+
+public String getName() {
+		return name;
+	}
+public String getStatusDescription() {
+		return this.statusDescription;
+	}
+public Priority getPriority() {
+		return this.priority;
+	}
+public Severity getSeverity() {
+		return this.statusSeverity;
+	}
+ public date getDateRaised() {
+		return this.DateRaised;
+	}
+public date getDateAssigned() {
+		return this.DateAssigneed;
+	}
+public date getExpectedCompletionDate() {
+		return this.ExpectedCompletionDate;
+	}
+public date getActualCompletionDate() {
+		return this.ActualCompletionDate;
+	}
+public String getStatus() {
+		return this.status;
+	}
+public void setStatus(String status) {
+		this.status = status;
+	}
+date getUpdateDate() {
+		return this.UpdateDatee;
+	}
  
+public void getListofDecisions() {
+		return this.ListofDesisions;
+	}
  
- 
+      
 
 }
