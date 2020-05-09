@@ -23,38 +23,40 @@ public class Issues {
        
 	private Issues [] issues;
 
-
-	public void createIssue(String IssueName,String IssueDescription,Date expectedStart, Date expectedEnd, int expectedDuration,String severity,
-	,Issue [] issues, Resource [] resources*/ ) {
-		
+Issue(String name, String description, String dateCreated, String resourceName,
+			String expectedCompletionDate, String actualCompletionDate,
+			String status, String statusDescription){
+		uniqueID = generateUniqueID();
 		this.IssueName=IssueName;		
 		this.IssueDescription=IssueDescription;	
 		this.expectedStartDate = expectedStart;
 		this.expectedEndDate = expectedEnd; 	
 		this.severity=severity;
 		this.status=status;
-		
-
-
-		if (type.toLowerCase() != "Issue" || type.toLowerCase() != "Issue Summary" || type.toLowerCase() != "" ) {
-		System.out.println("error with type of Issue");
-
+		setDescription(description);
+		if(dateCreated.isEmpty()) {
+			setTodayDate();
+		}else {
+			setTodayDate(dateCreated);
 		}
-
-		this.issues = issues;		
+		setResources(resourceName);
+		setExpectedCompletionDate(expectedCompletionDate);
+		setActualCompletionDate(actualCompletionDate);
+		setStatus(status);
+		setStatusDescription(statusDescription);
+		setUpdateDate();
 	}
-	/**
-	 * Not implemented
-	 */
-
 
 
 	public void GenerateUniqueID () {
-	
+	Random rand = new Random(); //instance of random class
+      int upperbound = 1000;
+        //generate random values from 0-1000
+      int int_random = rand.nextInt(upperbound); 
 	}
 
 
-	// Display Task method;
+	
 	public void updateName ( String newName) {this.name = newName;}
 	public void updateIssue(String newIssue) {this.description=newDesc;
 	public void  updateExpectedStartDate(Date newDate) {this.expectedStartDate=newDate;}
@@ -66,26 +68,40 @@ public class Issues {
 	public void updateStatus ( String newStatus) {this.status = newStatus;}
 	/*public void assignPriority (Priority priority) {
 
-	 	if (issue list is empty)
+	 	//order issues based on their severity
+		//high severity=high priority
+		//low severity= low priority
+		//assign a value of 0 to low severity
+		//assign a value of 1 to medium severity
+		//assign a value of 2 to high severity
+		
+		
+		 for(String str: arraylist){
+			System.out.println(str);
+		}
 
-	 		return, no resource to assign
+	   /* Sorting in decreasing order*/
+	   Collections.sort(arraylist, Collections.reverseOrder());
 
-	 	else 
-
-			
-	 		this.issue[this.issue.length()-1] = priority;
+	   /* Sorted List in reverse order*/
+	   System.out.println("ArrayList in decending order:");
+	   for(String str: arraylist){
+			System.out.println(str);
+		}
+	}
 
 	 }*/
 
 
 
 	/*public void assignIssue (Issue issue) {
- 	if (issues list is empty)
+ 	//assign issue to task
+	// define two strings
+String issue = this.issue;
+String task  = this.task;
 
- 		return, no issue to assign
- 	else 
- 		this.issues[this.issues.length()-1] = issue;
-
+// concatenate the strings
+String association  = issue + task;
  }*/
 
 }
