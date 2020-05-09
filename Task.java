@@ -1,11 +1,16 @@
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.Scanner;
 import java.util.UUID;
 
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 //import java.sql.date;
 
@@ -31,10 +36,11 @@ public class Task implements Serializable{
 	private LinkedList<Task>  succesors;
 	private String type;
 	private LinkedList<Issues> issues;
-	private LinkedList<Resource> resources;
+	private LinkedList<Resources> resources;
 
+	
 	public Task(String name,String description,String expectedStart, String expectedEnd, int expectedDuration,int expectedEffort,LinkedList<Task> predec, LinkedList<Task> succ,
-			String type,LinkedList<Issue> issue,LinkedList<Resource> resource) {
+			String type,LinkedList<Issues> issue,LinkedList<Resources> resource) {
 		this.setName(name);		this.setDescription(description);	this.setExpectedStartDate(expectedStart);
 		this.setExpectedEndDate(expectedEnd); 	this.setExpectedDuration(expectedDuration);
 		this.setExpectedEffort(expectedEffort);  	this.setPredeccesors(predec);	this.setSuccesors(succ);
@@ -64,14 +70,14 @@ public class Task implements Serializable{
 	}
 	public void updateTask(String name,String description,String expectedStart, String expectedEnd, 
 			int expectedDuration,int expectedEffort,LinkedList<Task> predec, LinkedList<Task> succ,
-			String type,LinkedList<Issue>  issues, LinkedList<Resource> resources ) {
+			String type,LinkedList<Issues>  issues, LinkedList<Resources> resources ) {
 		this.setName(name);		this.setDescription(description);	this.setExpectedStartDate(expectedStart);
 		this.setExpectedEndDate(expectedEnd); 	this.setExpectedDuration(expectedDuration);
 		this.setExpectedEffort(expectedEffort);  	this.setPredeccesors(predec);	this.setSuccesors(succ);
 		this.percentageCompleted=0; generateID();
 		if (isRightType(type))
 			this.type=type;
-		this.issues = issues;		this.resourrces= resources;
+		this.issues = issues;		this.resources= resources;
 	}
 	private boolean isRightType(String type) {
 		return (type.toLowerCase() == "task" || type.toLowerCase() == "summary task");
@@ -88,25 +94,25 @@ public class Task implements Serializable{
 		if (isRightType(type)) 
 			this.type=type;
 	}
-	public void setResource(LinkedList<Resource> resource) {
+	public void setResource(LinkedList<Resources> resource) {
 		this.resources=resource;
 	}
-	public LinkedList<Resource> getResource(){
+	public LinkedList<Resources> getResource(){
 		return this.resources;
 	}
-	public void setIssue(LinkedList<Issue> issues) {
+	public void setIssue(LinkedList<Issues> issues) {
 		this.issues=issues;
 	}
-	public LinkedList<Issue> getIssues(){
+	public LinkedList<Issues> getIssues(){
 		return this.issues;
 	}
-	public void addResource(Resource resource) {
+	public void addResource(Resources resource) {
 		this.resources.add(resource);
 	}
 	public void removeResource(int index) {
 		this.resources.remove(index);
 	}
-	public void addissues(issues issue) {
+	public void addissues(Issues issue) {
 		this.issues.add(issue);
 	}
 	public void removeissues(int index) {
@@ -221,93 +227,16 @@ public class Task implements Serializable{
 	}
 	
 	
-	
-/*
-	public Issues[] getIssues(){
-		return issues;
-		
-	public void assignIssue (Issue issue) {
- 	if (issues list is empty)
- 		return, no issue to assign
- 	else 
- 		this.issues[this.issues.length()-1] = issue;
- }
- */
-	/*public void assignResource (Resource resource) {
- 	if (resources list is empty)
- 		return, no resource to assign
- 	else 
- 		this.resources[this.resources.length()-1] = resource;
- }
- 	
- 	public Resource [] getResource(){
- 		return resource; 
- */
-	
 	public boolean isEmpty() {
 		return ID==null;
 	}
-	
-	
-	public void save(LinkedList<Task> tasks){
-		try {
-			//create file if there isnt one
-			File myObj = new File("Task.txt");
-			if (myObj.createNewFile()) {
-				System.out.println("File created: " + myObj.getName());
-			} else {
-				System.out.println("File already exists.");
-			}
-			try {
 
-				//write to the file
-				FileWriter myWriter = new FileWriter("Task.txt");
-				//myWriter.write("Files in Java might be tricky, but it is fun enough!");
-				for(int i = 0; i < tasks.size(); i++){
-					myWriter.write(tasks.get(i).toString());
-				}
+	public String toString() {
+		return "ID: "+ID+" name: "+name+" Description: "+description+" expected start date: "+expectedStartDate
+				+" expected end date: "+expectedEndDate+" expected duration: "
+			+expectedDuration+ " expectedEffort: "+expectedEffort+" Type: "+type + " percentage completed: "+ percentageCompleted+ " effort completed: effortCompleted";
 
-				myWriter.close();
-				System.out.println("Successfully wrote to the file.");
-			} catch (IOException e) {
-				System.out.println("An error occurred.");
-				e.printStackTrace();
-			}
-
-		} catch (IOException e) {
-			System.out.println("An error occurred.");
-			e.printStackTrace();
-		}
-	}
-
-	//load a new item into the linked list
-	public LinkedList<Task> load(){
-		LinkedList<Task> item = new LinkedList<Task>();
-		try {
-			//create file if there isnt one
-			File myObj = new File("Task.txt");
-			if (myObj.createNewFile()) {
-				System.out.println("File created: " + myObj.getName());
-			} else {
-				System.out.println("File already exists.");
-				Scanner reader = new Scanner(myObj);
-				String[] temp = new String[11];
-				String tempIN;
-				while(reader.hasNext()) {
-
-					tempIN = reader.nextLine();
-					temp= tempIN.split(":");
-					System.out.println("tempIN values = " + temp);
-					item.add(new Task(temp[0], temp[1], temp[2], temp[3], temp[4], temp[5], temp[6], temp[7], temp[8], temp[9], temp[10]));
-				}
-			}
-		}catch (IOException e) {
-			System.out.println("An error occurred.");
-			e.printStackTrace();
-		}
-
-		return item;
 	}
 	
-
 }
+
