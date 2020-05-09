@@ -19,7 +19,8 @@ public class Issues {
         private String createIssue;
 	private String edirIssue;
 	private String deleteIssue;
-
+List of Action Items: arrayList<ActionItem>
+List of Decisions: arrayList<Decisions>
        
 	private Issues [] issues;
 
